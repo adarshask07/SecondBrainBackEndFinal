@@ -13,12 +13,19 @@ export const createContent = async (req,res) => {
         user : userId,
         embeddings : embeddings
     };
-    const data = await Content.create(newContent);
+    await Content.create(newContent);
+    const contentData = await Content.find({
+        user: userId,
+    }, {
+        user:-0,
+        embeddings :0 
+    });
+
 
     return res.status(200).json({
-        sucess: true,
+        success: true,
         message: "Content created !",
-        data: data,
+        data: contentData,
     });
 };
 export const getContent = async (req, res) => {
@@ -45,7 +52,7 @@ export const getContent = async (req, res) => {
     
 
     return res.status(200).json({
-        sucess: true,
+        success: true,
         message: "Content Found",
         data: contentData
     })
@@ -56,8 +63,9 @@ export const getContent = async (req, res) => {
 export const getAllContent = async (req, res) => {
     
     const userId = req.user._id;
+    console.log(userId) 
 
-    const contentData = await Content.findOne({
+    const contentData = await Content.find({
         user: userId,
     }, {
         user:-0,
@@ -75,7 +83,7 @@ export const getAllContent = async (req, res) => {
   
 
     return res.status(200).json({
-        sucess: true,
+        success: true,
         message: "Content Found",
         data: contentData
     })
@@ -87,15 +95,17 @@ export const deleteContent = async (req,res)=>{
     const contentId = req.params._id ;
     const userId = req.user._id
 
-    const content = await Content.deleteOne({_id : contentId, user : userId})
-  
+    const content = await Content.deleteOne({_id : contentId, user : userId},{
+        user : 0,
+        embeddings : 0
+    })
+   
 
-    
 
     return res.status(200).json({
-        sucess : true ,
+        success : true ,
         message : "Content deleted Sucessfully" ,
-        content : content._id
+        data : content
     })
 }
 
@@ -106,7 +116,7 @@ export const updateContent = async (req,res)=>{
 
 
 
-    const updatedContent = await Content.findByIdAndUpdate({
+    const contentData = await Content.findByIdAndUpdate({
         _id : contentId
     }, {
         $set : {
@@ -117,12 +127,15 @@ export const updateContent = async (req,res)=>{
 
         }
     }, {
-        new : true
-    })
-
+        new : true,
+        
+        projection: { user: 0, embeddings: 0 }, // 
+    },)
+ 
     return res.status(200).json({
-        sucess: true ,
+        success: true ,
         message : "Updated Sucessfully",
-        data : updatedContent
+        data : contentData
+       
     })
 }

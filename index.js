@@ -15,7 +15,7 @@ app.use(cors())
 dbConnection();
 
 app.use('/auth', UserRoutes) ;
-app.use('/content', ContentRoutes)
+app.use('/memories', ContentRoutes)
 
 app.get("/", (req,res)=>{
 	return res.send("Hello")

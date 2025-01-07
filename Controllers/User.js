@@ -63,12 +63,13 @@ export const login = async (req, res) => {
 
         if (isPasswordCorrect) {
             const payload = {
-                id: isValidUser._id
+                _id: isValidUser._id
             };
             console.log(process.env.JWT_SECRET);
 
             // Create a JWT token
             const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+
 
             // Set the cookie (with security options like httpOnly)
             res.cookie("token", token).status(200).json({
@@ -96,7 +97,7 @@ export const login = async (req, res) => {
 
 export const searchContent = async (req, res) => {
     // const { query } = req.body;/
-    const query = "which is my favourite bike ?" ;
+    const {query} = req.body ;
     const userId = req.user._id ;
   
     try {
