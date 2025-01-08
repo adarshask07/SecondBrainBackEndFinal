@@ -4,6 +4,7 @@ import UserRoutes  from './Routes/UserRoutes.js'
 import cookieParser from 'cookie-parser';
 import ContentRoutes from './Routes/ContentRoutes.js'
 import cors from 'cors' ;
+import dotenv from 'dotenv'
 
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(json());
 app.use(cookieParser())
 app.use(cors())
 dbConnection();
+dotenv.config()
 
 app.use('/auth', UserRoutes) ;
 app.use('/memories', ContentRoutes)
@@ -25,6 +27,6 @@ app.get("/", (req,res)=>{
 
 
 // Start the server
-app.listen(3000, () => {
+app.listen(process.env.PORT_NO, () => {
 	console.log("Server is running on port 3000");
 });
