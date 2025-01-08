@@ -8,5 +8,6 @@ export async function getEmbedding(data) {
         'feature-extraction', 
         'Xenova/nomic-embed-text-v1');
     const results = await embedder(data, { pooling: 'mean', normalize: true });
+    console.log(results)
     return Array.from(results.data);
 }

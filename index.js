@@ -7,15 +7,17 @@ import cors from 'cors' ;
 
 
 const app = express();
+
 app.use(json());
 app.use(cookieParser())
 app.use(cors())
-
-// Connect to the database
 dbConnection();
 
 app.use('/auth', UserRoutes) ;
 app.use('/memories', ContentRoutes)
+
+// Connect to the database
+
 
 app.get("/", (req,res)=>{
 	return res.send("Hello")
