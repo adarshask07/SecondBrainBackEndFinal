@@ -11,7 +11,14 @@ const app = express();
 
 app.use(json());
 app.use(cookieParser())
-app.use(cors())
+app.use(cors({
+  origin: '*', // or use '*' to allow all origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // specify allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'] // specify allowed headers
+}));
+
+// Handle preflight requests for all routes
+app.options('*', cors());
 dbConnection();
 dotenv.config()
 
