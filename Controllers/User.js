@@ -24,7 +24,8 @@ export const signup = async (req, res) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  console.log(hashedPassword);
+//   
+
 
   const newUser = new User({
     username: username,
@@ -63,7 +64,7 @@ export const login = async (req, res) => {
       const payload = {
         _id: isValidUser._id,
       };
-      console.log(process.env.JWT_SECRET);
+     
 
       // Create a JWT token
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
@@ -83,7 +84,7 @@ export const login = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Error during login:", error); // Log the error
+   
     return res.status(500).json({
       success: false,
       message: "Server error",
