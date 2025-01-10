@@ -24,8 +24,7 @@ export const signup = async (req, res) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-//   
-
+  //
 
   const newUser = new User({
     username: username,
@@ -64,27 +63,30 @@ export const login = async (req, res) => {
       const payload = {
         _id: isValidUser._id,
       };
-     
 
       // Create a JWT token
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
+      const userInfo = {
+        username : isValidUser.username,
 
+      }
       // Set the cookie (with security options like httpOnly)
       res.cookie("token", token).status(200).json({
         success: true,
         message: "User logged in successfully",
         token: token,
+        user: userInfo,
       });
+
     } else {
-      return res.status(401).json({
-        success: false,
-        message: "Email or password is incorrect",
-      });
+        return res.status(401).json({
+          success: false,
+          message: "Email or password is incorrect",
+        });
     }
   } catch (error) {
-   
     return res.status(500).json({
       success: false,
       message: "Server error",
@@ -140,13 +142,13 @@ export const searchContent = async (req, res) => {
 
     // Run the query on your Content collection
     const results = await Content.aggregate(pipeline).exec();
-   
+
     const sortedResults = results.sort((a, b) => {
-        if (a.score && b.score) {
-          return b.score - a.score;
-        }
-        return 0; // No sorting if score is missing or invalid
-      });
+      if (a.score && b.score) {
+        return b.score - a.score;
+      }
+      return 0; // No sorting if score is missing or invalid
+    });
 
     const prompt = {
       query: query,
