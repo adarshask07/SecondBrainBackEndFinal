@@ -1,7 +1,7 @@
 // main.js
 import Groq from "groq-sdk";
 import dotenv from 'dotenv';
-import { preinfo } from "./prompts.js";
+import { preinfoSearch } from "./prompts.js";
 
 dotenv.config();
 
@@ -22,20 +22,36 @@ export async function main(prompt) {
 
 async function getGroqChatStream(prompt) {
   const user_query = prompt.query;
+  const preInfo = prompt.preInfo
 
   // Convert the brain array to a single string with all details
-  const brain = prompt.brain
-    .map(
-      (item) =>
-        `Title: ${item.title}\nContent: ${item.content}\nCreated At: ${item.createdAt}\nUpdated At: ${item.updatedAt}\nScore: ${item.score}`
-    )
-    .join("\n\n");
+  let brain;
+
+  if (Array.isArray(prompt.brain)) {
+    // Handle as an array (if provided as such)
+    brain = prompt.brain
+      .map(
+        (item) =>
+          `Title: ${item.title}\nContent: ${item.content}\nCreated At: ${item.createdAt}\nUpdated At: ${item.updatedAt}`
+      )
+      .join("\n\n");
+  } else if (typeof prompt.brain === "object" && prompt.brain !== null) {
+    // Handle as an object
+    const item = prompt.brain; // Access the `data` field
+    brain = `Title: ${item.title}\nContent: ${item.content}\nTags: ${item.tags.join(
+      ", "
+    )}\nCreated At: ${item.createdAt}\nUpdated At: ${item.updatedAt}`;
+  } else {
+    // Handle invalid input
+    brain = "No valid brain data provided.";
+  }
+// console.log(brain);
 
   return groq.chat.completions.create({
     messages: [
       {
         role: "system",
-        content: preinfo,
+        content: preInfo,
       },
       {
         role: "system",

@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import { main } from "../config/Llama.js";
 dotenv.config();
 import mongoose from "mongoose";
+import { preinfoSearch } from "../config/prompts.js";
 
 const { ObjectId } = mongoose.Types;
 
@@ -96,7 +97,8 @@ export const login = async (req, res) => {
 
 export const searchContent = async (req, res) => {
   const { query } = req.body;
-  console.log(req.user._id);
+  // console.log(req.user._id);
+  
   // const query = "which bike do i have ?" ;
   const userId = new mongoose.Types.ObjectId(String(req.user._id)); // Correctly reference _id
 
@@ -153,6 +155,7 @@ export const searchContent = async (req, res) => {
     const prompt = {
       query: query,
       brain: results,
+      preInfo : preinfoSearch
     };
 
     const answer = await main(prompt);

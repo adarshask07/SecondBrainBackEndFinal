@@ -1,4 +1,6 @@
 import { getEmbedding } from "../config/GetEmbeddings.js";
+import { main } from "../config/Llama.js";
+import { moreAboutCard } from "../config/prompts.js";
 import { Content } from "../Models/Content.model.js";
 
 export const createContent = async (req,res) => {
@@ -48,22 +50,40 @@ export const getContent = async (req, res) => {
         });
     }
 
- 
-    
-
     return res.status(200).json({
         success: true,
         message: "Content Found",
-        data: contentData
+        data: contentData,
+       
     })
 
 };
+
+export const  tellMoreAboutCard = async (req,res)=>{
+        const data = req.body.data ;
+  
+        
+        const prompt = {
+            brain : data ,
+            preInfo : moreAboutCard,
+            query : "tell me about my card"
+        }
+        const response = await main(prompt) ;
+
+        return res.status(200).json({
+            success : true ,
+            data : response ,
+
+        })
+
+}   
 
 
 export const getAllContent = async (req, res) => {
     
     const userId = req.user._id;
-    console.log(userId) 
+    // console.log(userId) 
+    
 
     const contentData = await Content.find({
         user: userId,
