@@ -62,7 +62,7 @@ async function getGroqChatStream(prompt) {
         content: user_query,
       },
     ],
-    model: "llama-3.3-70b-versatile",
+    model : "deepseek-r1-distill-llama-70b",
     temperature: 0.5,
     max_tokens: 1024,
     top_p: 1,
