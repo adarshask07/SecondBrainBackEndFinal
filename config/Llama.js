@@ -5,7 +5,7 @@ import { preinfoSearch } from "./prompts.js";
 
 dotenv.config();
 
-const groq = new Groq({ apiKey: "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" });
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function main(prompt) {
   const stream = await getGroqChatStream(prompt);
